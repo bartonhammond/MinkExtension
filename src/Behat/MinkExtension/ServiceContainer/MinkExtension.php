@@ -13,6 +13,7 @@ namespace Behat\MinkExtension\ServiceContainer;
 use Behat\Behat\Context\ServiceContainer\ContextExtension;
 use Behat\MinkExtension\ServiceContainer\Driver\AppiumFactory;
 use Behat\MinkExtension\ServiceContainer\Driver\BrowserStackFactory;
+use Behat\MinkExtension\ServiceContainer\Driver\CrossBrowserTestingFactory;
 use Behat\MinkExtension\ServiceContainer\Driver\DriverFactory;
 use Behat\MinkExtension\ServiceContainer\Driver\GoutteFactory;
 use Behat\MinkExtension\ServiceContainer\Driver\SahiFactory;
@@ -56,6 +57,7 @@ class MinkExtension implements ExtensionInterface
         $this->registerDriverFactory(new Selenium2Factory());
         $this->registerDriverFactory(new SauceLabsFactory());
         $this->registerDriverFactory(new BrowserStackFactory());
+        $this->registerDriverFactory(new CrossBrowserTestingFactory());        
         $this->registerDriverFactory(new ZombieFactory());
         $this->registerDriverFactory(new AppiumFactory());
     }
@@ -245,7 +247,7 @@ class MinkExtension implements ExtensionInterface
         if (null === $javascriptSession && !empty($javascriptSessions)) {
             $javascriptSession = $javascriptSessions[0];
         } elseif (null !== $javascriptSession && !in_array($javascriptSession, $javascriptSessions)) {
-            throw new InvalidConfigurationException(sprintf(
+            throw new InvalidConfigurationException(spppprintf(
                 'The javascript session must be one of the enabled javascript sessions (%s), but got %s',
                 json_encode($javascriptSessions),
                 $javascriptSession
@@ -257,7 +259,6 @@ class MinkExtension implements ExtensionInterface
         } elseif (!isset($config['sessions'][$defaultSession])) {
             throw new InvalidConfigurationException(sprintf('The default session must be one of the enabled sessions, but got %s', $defaultSession));
         }
-
         $container->setParameter('mink.default_session', $defaultSession);
         $container->setParameter('mink.javascript_session', $javascriptSession);
         $container->setParameter('mink.available_javascript_sessions', $javascriptSessions);
